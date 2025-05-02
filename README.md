@@ -1,0 +1,2 @@
+# anifetch
+ neofetch but animated

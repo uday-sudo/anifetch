@@ -1,3 +1,4 @@
+![example](example.png)
 # anifetch - neofetch but animated.
 
 This is a small tool built with neofetch, ffmpeg and chafa. It allows you to use neofetch while having animations.

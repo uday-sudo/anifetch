@@ -1,21 +1,31 @@
 #!/bin/bash
 
 FRAME_DIR="/tmp/anifetch/output"
-FRAMERATE = $1
-TOP = $2
-LEFT = $3
-RIGHT = $4
-BOTTOM = $5
+
+# Gracefully handle Ctrl+C
+trap "echo -e '\nExiting...'; exit 0" SIGINT
+
+framerate=$1
+top=$2
+left=$3
+right=$4
+bottom=$5
 
 # Compute 1 / FRAMERATE using bc
-SLEEP_TIME = $(echo "scale=4; 1 / $FRAMERATE" | bc)
+sleep_time=$(echo "scale=4; 1 / $framerate" | bc)
+echo $sleep_time
 
+index=0
+index+=1
 while true; do
   for frame in $(ls "$FRAME_DIR" | sort -n); do
     clear
-
-    # Use -e to interpret ANSI escape codes
+    
+    for (( i=0; i<top; i++ )); do
+      echo
+    done
+    
     cat "$FRAME_DIR/$frame"
-    sleep $SLEEP_TIME
+    sleep "$sleep_time"
   done
 done

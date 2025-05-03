@@ -4,6 +4,9 @@ import pathlib
 import argparse
 import shutil
 
+GAP = 2
+PAD_LEFT = 4
+
 parser = argparse.ArgumentParser(
     prog="Anifetch",
     description="Allows you to use neofetch with video in terminal(using chafa).",
@@ -40,15 +43,7 @@ def print_verbose(*msg):
 
 
 # Get Neofetch Output
-neo_output = subprocess.check_output(["neofetch"], shell=True, text=True)
-
-with open("/tmp/anifetch/layout.txt", "w") as f:
-    f.write(neo_output)
-    # I just need to move this down, and also apply that padding thingy(for lines that dont have chafa anim)
-    # so basically repeat what I have done but this time its for layout.
-    # If I do this then I can get rid of the layout padding code on the last part. because the layout will already be fixed.
-
-neo_output = neo_output.splitlines()
+neo_output = subprocess.check_output(["neofetch"], shell=True, text=True).splitlines()
 for i, line in enumerate(neo_output):
     line = line[4:]  # i forgot what this does, but its important iirc.
     neo_output[i] = line
@@ -64,8 +59,8 @@ if not pathlib.Path("/tmp/anifetch/").exists():
     os.mkdir("/tmp/anifetch")
 if not pathlib.Path("/tmp/anifetch/video").exists():
     os.mkdir("/tmp/anifetch/video")
-    if not pathlib.Path("/tmp/anifetch/output").exists():
-        os.mkdir("/tmp/anifetch/output")
+if not pathlib.Path("/tmp/anifetch/output").exists():
+    os.mkdir("/tmp/anifetch/output")
 
 # check old file
 old_filename = ""
@@ -112,6 +107,11 @@ if should_update:
         stderr=None if not args.verbose else subprocess.STDOUT,
     )
 
+# TODO: I think I'm also supposed to remove the output cache(in case the number of animation frames of the new animation are shorter than the old animation)
+# if the new anim frames is shorter than the old one, then in /output there will be both new and old frames.
+
+
+
 # get the frames
 animation_files = os.listdir(pathlib.Path("/tmp/anifetch/video"))
 animation_files.sort()
@@ -132,7 +132,7 @@ for i, f in enumerate(animation_files):
         chafa_cmd,
         text=True,
     )
-    
+
     # if wanted aspect ratio doesnt match source, chafa makes width as high as it can, and adjusts height accordingly.
     # AKA: even if I specify 40x20, chafa might give me 40x11 or something like that.
     if i == 0:
@@ -141,16 +141,42 @@ for i, f in enumerate(animation_files):
 
 print_verbose("-----------")
 
-PADDING = 2
+# modifying template to account for the width of the chafa animation.
+
+chafa_rows = frames[0].splitlines()
+template = []
+for y, neo_line in enumerate(neo_output):
+    output = ""
+    try:
+        chafa_line = chafa_rows[y]
+    except IndexError:
+        chafa_line = ""
+
+    width_to_offset = GAP
+
+    if chafa_line:
+        if y == HEIGHT - 1:  # get rid of the empty end frame
+            width_to_offset = GAP + WIDTH
+    if not chafa_line:
+        width_to_offset = GAP + WIDTH
+
+    output = f"{WIDTH * " "}{' ' * width_to_offset}{neo_line}\n"
+    template.append(output)
+
+# writing the tempate to a file.
+with open("/tmp/anifetch/layout.txt", "w") as f:
+    f.writelines(template)
+    # I just need to move this down, and also apply that padding thingy(for lines that dont have chafa anim)
+    # so basically repeat what I have done but this time its for layout.
+    # If I do this then I can get rid of the layout padding code on the last part. because the layout will already be fixed.
 
 # for defining the positions of the cursor, that way I can set cursor pos and only redraw a portion of the text, not the entire text.
-TOP = 0
+TOP = 2
 LEFT = 0
 RIGHT = WIDTH
 BOTTOM = HEIGHT
 
 # assuming that the neofetch text is longer vertically
-frame_height = len(frames[0].splitlines())
 out_frames: list[str] = []
 for frame_i, frame in enumerate(frames):
     print_verbose(f"PROCESSING frame {frame_i}")
@@ -165,15 +191,15 @@ for frame_i, frame in enumerate(frames):
         except IndexError:
             chafa_line = ""
 
-        width_to_offset = PADDING
-
+        width_to_offset = GAP
+    
         if chafa_line:
             if y == HEIGHT - 1:  # get rid of the empty end frame
-                width_to_offset = PADDING + WIDTH
+                width_to_offset = GAP + WIDTH
         if not chafa_line:
-            width_to_offset = PADDING + WIDTH
-
-        output = f"{chafa_line}{' ' * width_to_offset}{neo_line}"
+            width_to_offset = GAP + WIDTH
+        
+        output = f"{PAD_LEFT * " "}{chafa_line}{' ' * width_to_offset}{neo_line}"
 
         out_frame_arr.append(output)
 
@@ -187,7 +213,7 @@ print_verbose("First Frame Preview: ")
 print_verbose(out_frames[0])
 
 for i, frame in enumerate(out_frames):
-    with open(f"/tmp/anifetch/output/{i}", "w") as file:
+    with open(f"/tmp/anifetch/output/{i}.txt", "w") as file:
         file.write(frame)
 
 print_verbose("WROTE TO /tmp/anifetch/output/ .")
@@ -195,6 +221,9 @@ print_verbose("WROTE TO /tmp/anifetch/output/ .")
 script_dir = os.path.dirname(__file__)
 script_path = os.path.join(script_dir, "loop.sh")
 
-subprocess.call(["bash", script_path, str(args.framerate), str(TOP), str(LEFT), str(RIGHT), str(BOTTOM)], text=True)
+try:
+    subprocess.call(["bash", script_path, str(args.framerate), str(TOP), str(LEFT), str(RIGHT), str(BOTTOM)], text=True)
+except KeyboardInterrupt:
+    pass
 
 # subprocess.call(["bash", "anifetch.sh"], text=True)

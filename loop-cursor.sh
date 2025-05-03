@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# attempt at making rendering faster by only updating the parts where there is an animation.
+
 FRAME_DIR="/tmp/anifetch/output"
 FRAMERATE=$1
 TOP=$2

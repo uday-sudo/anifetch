@@ -45,4 +45,19 @@ cat "/tmp/anifetch/template.txt"
 ###############################
 
 # Main loop
+while true; do
+  for frame in $(ls "$FRAME_DIR" | sort -n); do
+    current_top=$top
+    while IFS= read -r line; do
+        tput cup "$current_top" "$left"
+        echo -ne "$line"
+        current_top=$((current_top + 1))
+        if [[ $current_top -gt $bottom ]]; then
+            break
+        fi
+        echo "$adjusted_sleep_time" | awk '{system("sleep " $1)}'
+    done < "$FRAME_DIR/$frame"
 
+    top=$2  # Reset vertical position
+  done
+done

@@ -53,7 +53,7 @@ Keep in mind that these results are from running it cached. If you're running it
 
 ## Notes
 
-Anifetch attempts to cache ffmpeg output so that it doesn't need to render them again when you run it with the same file. However, if the name of the file is the same, but it's contents has changed, it won't re-render it. In that case, you will need to add `--force-render` as an argument to `anifetch.py` so that it re-renders it. You only have to do this once when you change the file.
+Anifetch attempts to cache ffmpeg output so that it doesn't need to render them again when you run it with the same file. However, if the name of the file is the same, but it's contents has changed or the animation size arguments has changed, it won't re-render it. In that case, you will need to add `--force-render` as an argument to `anifetch.py` so that it re-renders it. You have to do this once when you change the file or change the animation size argument.
 
 You should probably make sure that the video's height (in lines) is lower or equal to the height of the neofetch output. Otherwise it will probably give an IndexError.
 

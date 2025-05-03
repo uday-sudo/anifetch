@@ -37,7 +37,7 @@ done
 
 cat "/tmp/anifetch/template.txt"
 
-###############################3
+###############################
 
 # Main loop
 while true; do

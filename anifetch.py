@@ -89,11 +89,14 @@ frames: list[str] = []
 # Generate ASCII Video Frames via chafa & ffmpeg
 if should_update:
     print_verbose("SHOULD RENDER WITH CHAFA")
+
     # delete all old frames
     shutil.rmtree("/tmp/anifetch/video")
     os.mkdir("/tmp/anifetch/video")
 
-    # ffmpeg -i your-animation.gif -r 10 /tmp/anifetch/%03d.png
+    stdout = None if args.verbose else subprocess.DEVNULL
+    stderr = None if args.verbose else subprocess.STDOUT
+
     subprocess.call(
         [
             "ffmpeg",
@@ -103,12 +106,15 @@ if should_update:
             f"{args.framerate}",
             "/tmp/anifetch/video/%03d.png",
         ],
-        stdout=None if not args.verbose else subprocess.DEVNULL,
-        stderr=None if not args.verbose else subprocess.STDOUT,
+        stdout=stdout,
+        stderr=stderr,
     )
-
-# TODO: I think I'm also supposed to remove the output cache(in case the number of animation frames of the new animation are shorter than the old animation)
-# if the new anim frames is shorter than the old one, then in /output there will be both new and old frames.
+    
+    
+    # TODO: I think I'm also supposed to remove the output cache(in case the number of animation frames of the new animation are shorter than the old animation)
+    # if the new anim frames is shorter than the old one, then in /output there will be both new and old frames.
+    shutil.rmtree("/tmp/anifetch/output")
+    os.mkdir("/tmp/anifetch/output")
 
 
 
@@ -191,13 +197,13 @@ for frame_i, frame in enumerate(frames):
             chafa_line = ""
 
         width_to_offset = GAP
-    
+
         if chafa_line:
             if y == HEIGHT - 1:  # get rid of the empty end frame
                 width_to_offset = GAP + WIDTH
         if not chafa_line:
             width_to_offset = GAP + WIDTH #+ PAD_LEFT
-        
+
         output = f"{PAD_LEFT * " "}{chafa_line}{' ' * width_to_offset}{neo_line}"
 
         out_frame_arr.append(output)

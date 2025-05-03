@@ -9,7 +9,9 @@ if you don't have ffmpeg, download it here: [ffmpeg download](https://www.ffmpeg
 
 Clone the git repo.
 
-`git clone https://github.com/Notenlish/anifetch`
+```cmd
+git clone https://github.com/Notenlish/anifetch
+```
 
 You don't need to setup an venv or install any python modules.
 
@@ -21,9 +23,9 @@ An example neofetch config can be found here: `example-config.conf`
 
 Simply place your video/gif file in the project folder. There's an already included test file called `video.mp4`, you can use that if you want.
 
-Then run `python3 anifetch.py -f [filename] --framerate 10 --width 40 --height 20`.
+Then run `python3 anifetch.py -f [filename] --framerate 10 --width 40 --height 20 -c "[add optional chafa arguments]"`.
 
-Here's an example command: `python3 anifetch.py -f "video.mp4" -r 10 -W 40 -H 20`
+Here's an example command: `python3 anifetch.py -f "video.mp4" -r 10 -W 40 -H 20 -c "--symbols wide --fg-only"`
 
 Run `python3 anifetch.py --help` if you need help.
 
@@ -41,11 +43,15 @@ You should probably make sure that the video's height (in lines) is lower or equ
 Also, ffmpeg can generate the the same image for 2 consecutive frames. IDK what would be the best way to solve this issue. I could check the hash of the images but that would add more processing load.
 
 ## What's Next
-[] - Fix the potential IndexError that comes when chafa output in lines is higher than the neofetch output.
-[] - Add music support
-[] - Also cache chafa output
-[] - make it faster
-[] - Only save the template + animation frames, dont save the animation frames with the layout applied to them.
+- [ ] Fix the potential IndexError that comes when chafa output in lines is higher than the neofetch output.
+
+- [ ] Add music support
+
+- [ ] Also cache chafa output
+
+- [ ] make it faster
+
+- [ ] Only save the template + animation frames, dont save the animation frames with the layout applied to them.
 
 
 ## Credits

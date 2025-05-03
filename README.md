@@ -3,6 +3,7 @@
 This is a small tool built with neofetch, ffmpeg and chafa. It allows you to use neofetch while having animations.
 
 ## How to Install
+
 You need `chafa` to be installed. For debian/ubuntu it is `apt install chafa`. [Download Instructions](https://hpjansson.org/chafa/download/)
 
 if you don't have ffmpeg, download it here: [ffmpeg download](https://www.ffmpeg.org/download.html)
@@ -30,9 +31,24 @@ Here's an example command: `python3 anifetch.py -f "video.mp4" -r 10 -W 40 -H 20
 Run `python3 anifetch.py --help` if you need help.
 
 ## Creating a Shortcut
-  Just create an shell alias.
-  
-  for bash it is: `alias anifetch='your-command'`
+
+Just create an shell alias.
+
+for bash it is: `alias anifetch='your-command'`
+
+## Benchmarks
+
+Here's the benchmark from running each cli 10 times:
+
+| CLI       | Time Taken(total) | Time Taken (avg) |
+| --------- | ----------------- | ---------------- |
+| neofetch  | 6.357 seconds     | 0.6357 seconds   |
+| fastfetch | 0.127 seconds     | 0.127 seconds    |
+| anifetch  | 5.869 seconds     | 0.5869 seconds   |
+
+_So, anifetch is only 0.0488 seconds slower than neofetch._
+
+Keep in mind that these results are from running it cached. If you're running it for the first time, or told the cli to re-render it, it will take some time to generate and cache all the frames.
 
 ## Notes
 
@@ -43,6 +59,7 @@ You should probably make sure that the video's height (in lines) is lower or equ
 Also, ffmpeg can generate the the same image for 2 consecutive frames. IDK what would be the best way to solve this issue. I could check the hash of the images but that would add more processing load.
 
 ## What's Next
+
 - [ ] Fix the potential IndexError that comes when chafa output in lines is higher than the neofetch output.
 
 - [ ] Add music support
@@ -53,10 +70,11 @@ Also, ffmpeg can generate the the same image for 2 consecutive frames. IDK what 
 
 - [ ] Only save the template + animation frames, dont save the animation frames with the layout applied to them.
 
+- [ ] Add fastfetch support.
+
 - [ ] Instead of just caching the filename, cache the width and height as well
 
 - [ ] Seperate frame generation framerate(ffmpeg) and video playback framerate
-
 
 ## Credits
 

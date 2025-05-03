@@ -53,6 +53,10 @@ Also, ffmpeg can generate the the same image for 2 consecutive frames. IDK what 
 
 - [ ] Only save the template + animation frames, dont save the animation frames with the layout applied to them.
 
+- [ ] Instead of just caching the filename, cache the width and height as well
+
+- [ ] Seperate frame generation framerate(ffmpeg) and video playback framerate
+
 
 ## Credits
 

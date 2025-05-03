@@ -42,9 +42,9 @@ Here's the benchmark from running each cli 10 times:
 
 | CLI       | Time Taken(total) | Time Taken (avg) |
 | --------- | ----------------- | ---------------- |
-| neofetch  | 6.357 seconds     | 0.6357 seconds   |
+| anifetch  | 6.357 seconds     | 0.6357 seconds   |
 | fastfetch | 0.127 seconds     | 0.127 seconds    |
-| anifetch  | 5.869 seconds     | 0.5869 seconds   |
+| neofetch  | 5.869 seconds     | 0.5869 seconds   |
 
 _So, anifetch is only 0.0488 seconds slower than neofetch._
 

@@ -3,11 +3,17 @@
 # attempt at making rendering faster by only updating the parts where there is an animation.
 
 FRAME_DIR="/tmp/anifetch/output"
-FRAMERATE=$1
-TOP=$2
-LEFT=$3
-RIGHT=$4
-BOTTOM=$5
+
+# Gracefully handle Ctrl+C
+# TODO: the cursor should be placed at end when the user does ctrl + c
+trap "echo -e '\nExiting...'; exit 0" SIGINT
+
+framerate=$1
+top=$2
+left=$3
+right=$4
+bottom=$5
+
 
 # Check for FRAMERATE input
 if [ $# -ne 5 ]; then
@@ -16,33 +22,38 @@ if [ $# -ne 5 ]; then
 fi
 
 # Compute 1 / FRAMERATE using bc
-SLEEP_TIME=$(echo "scale=4; 1 / $FRAMERATE" | bc)
+sleep_time=$(echo "scale=4; 1 / $framerate" | bc)
 
 # Hide cursor
 tput civis
 trap "tput cnorm; tput cup $(tput lines) 0; exit" INT
 
-# Optional: print static layout here (once)
+# Optional: print static template here (once)
 clear
-cat "/tmp/anifetch/layout.txt"
-# Make space for animation or leave it blank
+
+for (( i=0; i<top; i++ )); do
+  echo
+done
+
+cat "/tmp/anifetch/template.txt"
+
+###############################3
 
 # Main loop
 while true; do
   for frame in $(ls "$FRAME_DIR" | sort -n); do
-    tput cup "$TOP" "$LEFT"
-
-    # Print frame at the specified position
+    current_top=$top
     while IFS= read -r line; do
-      tput cup $TOP $LEFT
-      echo -ne "$line"
-      TOP=$((TOP + 1))
-      if [[ $TOP -gt $BOTTOM ]]; then
+    tput cup "$current_top" "$left"
+    echo -ne "$line"
+    current_top=$((current_top + 1))
+    if [[ $current_top -gt $bottom ]]; then
         break
-      fi
+    fi
     done < "$FRAME_DIR/$frame"
 
-    sleep "$SLEEP_TIME"
-    TOP=$2  # Reset vertical position
+
+    sleep "$sleep_time"
+    top=$2  # Reset vertical position
   done
 done

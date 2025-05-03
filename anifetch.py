@@ -142,7 +142,6 @@ for i, f in enumerate(animation_files):
 print_verbose("-----------")
 
 # modifying template to account for the width of the chafa animation.
-
 chafa_rows = frames[0].splitlines()
 template = []
 for y, neo_line in enumerate(neo_output):
@@ -160,11 +159,11 @@ for y, neo_line in enumerate(neo_output):
     if not chafa_line:
         width_to_offset = GAP + WIDTH
 
-    output = f"{WIDTH * " "}{' ' * width_to_offset}{neo_line}\n"
+    output = f"{(PAD_LEFT+(GAP*2)) * " "}{' ' * width_to_offset}{neo_line}\n"
     template.append(output)
 
 # writing the tempate to a file.
-with open("/tmp/anifetch/layout.txt", "w") as f:
+with open("/tmp/anifetch/template.txt", "w") as f:
     f.writelines(template)
     # I just need to move this down, and also apply that padding thingy(for lines that dont have chafa anim)
     # so basically repeat what I have done but this time its for layout.
@@ -172,9 +171,9 @@ with open("/tmp/anifetch/layout.txt", "w") as f:
 
 # for defining the positions of the cursor, that way I can set cursor pos and only redraw a portion of the text, not the entire text.
 TOP = 2
-LEFT = 0
-RIGHT = WIDTH
-BOTTOM = HEIGHT
+LEFT = PAD_LEFT
+RIGHT = WIDTH + PAD_LEFT
+BOTTOM = HEIGHT# + TOP
 
 # assuming that the neofetch text is longer vertically
 out_frames: list[str] = []
@@ -197,7 +196,7 @@ for frame_i, frame in enumerate(frames):
             if y == HEIGHT - 1:  # get rid of the empty end frame
                 width_to_offset = GAP + WIDTH
         if not chafa_line:
-            width_to_offset = GAP + WIDTH
+            width_to_offset = GAP + WIDTH #+ PAD_LEFT
         
         output = f"{PAD_LEFT * " "}{chafa_line}{' ' * width_to_offset}{neo_line}"
 
@@ -219,7 +218,10 @@ for i, frame in enumerate(out_frames):
 print_verbose("WROTE TO /tmp/anifetch/output/ .")
 
 script_dir = os.path.dirname(__file__)
-script_path = os.path.join(script_dir, "loop.sh")
+script_path = os.path.join(script_dir, "loop-cursor.sh")
+
+# print(args.framerate, TOP, LEFT, RIGHT, BOTTOM)
+# raise SystemExit
 
 try:
     subprocess.call(["bash", script_path, str(args.framerate), str(TOP), str(LEFT), str(RIGHT), str(BOTTOM)], text=True)

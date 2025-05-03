@@ -13,7 +13,6 @@ bottom=$5
 
 # Compute 1 / FRAMERATE using bc
 sleep_time=$(echo "scale=4; 1 / $framerate" | bc)
-echo $sleep_time
 
 index=0
 index+=1

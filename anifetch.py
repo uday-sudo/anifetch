@@ -31,8 +31,7 @@ parser.add_argument(
     action="store_true",
     help="Disabled by default. Anifetch saves the filename to check if the file has changed, if the name is same, it won't render it again. If enabled, the video will be forcefully rendered, whether it has the same name or not. Please note that it only checks for filename, if you changed the framerate then you'll need to force render.",
 )
-
-# I could make the caching thing better by saving the name of the input file in /tmp/anifetch. If the filename is different --> should render animation. If the filename is same, but they say --force-render then render animation.
+parser.add_argument("-c","--chafa-arguments",default="--symbols ascii --fg-only", help="Specify the arguments to give to chafa. For more informations, use 'chafa --help'")
 
 args = parser.parse_args()
 
@@ -61,6 +60,10 @@ if not pathlib.Path("/tmp/anifetch/video").exists():
     os.mkdir("/tmp/anifetch/video")
 if not pathlib.Path("/tmp/anifetch/output").exists():
     os.mkdir("/tmp/anifetch/output")
+
+if not pathlib.Path(args.filename).exists():
+    print("Couldn't find file", pathlib.Path(args.filename))
+    raise FileNotFoundError(args.filename)
 
 # check old file
 old_filename = ""
@@ -102,9 +105,9 @@ if should_update:
             "ffmpeg",
             "-i",
             f"{args.filename}",
-            "-r",
-            f"{args.framerate}",
-            "/tmp/anifetch/video/%03d.png",
+            '-vf',
+            f"fps={args.framerate}",
+            "/tmp/anifetch/video/%05d.png",
         ],
         stdout=stdout,
         stderr=stderr,
@@ -123,13 +126,13 @@ animation_files = os.listdir(pathlib.Path("/tmp/anifetch/video"))
 animation_files.sort()
 for i, f in enumerate(animation_files):
     print_verbose(f"STARTING WITH FRAME {f}")
+    
     # f = 001.png
     path = pathlib.Path("/tmp/anifetch/video") / f
     chafa_cmd = [
         "chafa",
-        "--format",
-        "symbols",
-        "--color-space=rgb",
+        *args.chafa_arguments.split(" "),
+        # "--color-space=rgb",
         f"--size={WIDTH}x{HEIGHT}",
         path.as_posix(),
     ]

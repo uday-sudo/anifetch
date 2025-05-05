@@ -48,7 +48,7 @@ cat "$HOME/.local/share/anifetch/template.txt"
 ###############################
 
 if [ $# -eq 6 ]; then
-ffplay -nodisp -autoexit -loglevel quiet $6 &
+ffplay -nodisp -autoexit -loop 0 -loglevel quiet $6 &
 fi
 
 # Main loop

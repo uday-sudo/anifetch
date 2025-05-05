@@ -1,3 +1,4 @@
+from posix import truncate
 import subprocess
 import os
 import pathlib
@@ -5,12 +6,35 @@ import argparse
 import shutil
 import time
 import json
+import sys
 
 
 def print_verbose(*msg):
     if args.verbose:
         print(*msg)
 
+def get_ext_from_codec(codec:str):
+    codec_extension_map = {
+        "aac": "m4a",
+        "mp3": "mp3",
+        "opus": "opus",
+        "vorbis": "ogg",
+        "pcm_s16le": "wav",
+        "flac": "flac",
+        "alac": "m4a"
+    }
+    return codec_extension_map.get(codec,"bin")
+
+def check_codec_of_file(file:str):
+    ffprobe_cmd = ["ffprobe", "-v", "error", "-select_streams", "a:0", "-show_entries", "stream=codec_name", "-of", "default=nokey=1:noprint_wrappers=1", file]
+    codec = str(subprocess.check_output(ffprobe_cmd, text=True).strip())
+    return codec
+
+def extract_audio_from_file(file:str, extension):
+    audio_file = BASE_PATH / f"output_audio.{extension}"
+    extract_cmd = ["ffmpeg", "-i", file, "-y", "-vn", "-c:a", "copy", "-loglevel","quiet", audio_file]
+    subprocess.call(extract_cmd)
+    return audio_file
 
 def get_data_path():
     xdg_data_home = os.environ.get(
@@ -19,6 +43,12 @@ def get_data_path():
     data_path = os.path.join(xdg_data_home, "anifetch")
     os.makedirs(data_path, exist_ok=True)
     return pathlib.Path(data_path)
+
+
+def check_sound_flag():
+    if "--sound" in sys.argv or "-s" in sys.argv:
+        return True
+    return False
 
 
 # TODO: cache arguments + filename
@@ -45,6 +75,7 @@ parser.add_argument(
 parser.add_argument(
     "-f",
     "--filename",
+    "--file",
     required=True,
     help="Specify a file via this argument.",
     type=str,
@@ -67,11 +98,13 @@ parser.add_argument(
     "-pr",
     "--playback-rate",
     default=10,
-    help="Sets the playback rate of the animation. Not to be confused with the 'framerate' option. This basically sets for how long the script will wait before rendering new frame, while the framerate option affects how many frames are generated via ffmpeg.",
+    help="Ignored when a sound is playing so that desync doesn't happen. Sets the playback rate of the animation. Not to be confused with the 'framerate' option. This basically sets for how long the script will wait before rendering new frame, while the framerate option affects how many frames are generated via ffmpeg.",
 )
 parser.add_argument(
     "-s",
     "--sound",
+    required=False,
+    nargs="?",
     help="Optional. Will playback a sound file while displaying the animation.",
     type=str,
 )
@@ -96,6 +129,7 @@ parser.add_argument(
     action="store_true",
 )
 args = parser.parse_args()
+args.sound_flag_given = check_sound_flag()  # adding this to the args so that it considers whether the flag was given or not and if the flag is given what the sound file was.
 
 
 BASE_PATH = get_data_path()
@@ -112,12 +146,12 @@ if not pathlib.Path(args.filename).exists():
 
 # print(args._get_kwargs())
 # [ ('filename', 'example.mp4'), ('width', 40), ('height', 20), ('verbose', False), ('framerate', 10), ('sound', 'bad-apple.mp3'), ('force_render', False), ('chafa_arguments', '--symbols ascii --fg-only') ]
-args_dict = {key: value for key, value in args._get_kwargs()}
 
 # check cache
 old_filename = ""
 should_update = False
 try:
+    args_dict = {key: value for key, value in args._get_kwargs()}
     if args.force_render:
         should_update = True
     else:
@@ -140,16 +174,22 @@ try:
                         f"Value didnt match cached value, will cache again. Value:{value} Cache:{cached_value}",
                     )
                     should_update = True
-                    print_verbose("Cache invalid, will cache again.")
+                    if key == "sound":
+                        # this code is spaghettifying at an alarming rate.
+                        sound_that_wouldve_been_generated = ""
+                        codec = check_codec_of_file(args.filename)
+                        ext = get_ext_from_codec(codec)
+                        sound_that_wouldve_been_generated = str(BASE_PATH / f"output_audio.{ext}")
+                        if sound_that_wouldve_been_generated == cached_value:
+                            should_update=False
+                    if should_update:
+                        print_verbose("Cache invalid, will cache again.")
 except FileNotFoundError:
     should_update = True
 
-print_verbose(
-    f"Will use cache:{not should_update}",
-)
+if should_update:
+    print("Caching...")
 
-with open(BASE_PATH / "cache.json", "w") as f:
-    json.dump(args_dict, f)
 
 
 WIDTH = args.width
@@ -170,6 +210,10 @@ if should_update:
     stdout = None if args.verbose else subprocess.DEVNULL
     stderr = None if args.verbose else subprocess.STDOUT
 
+    # TODO: remove this
+    stdout = subprocess.DEVNULL
+    stderr = subprocess.DEVNULL
+
     subprocess.call(
         [
             "ffmpeg",
@@ -183,6 +227,18 @@ if should_update:
         stderr=stderr,
     )
 
+    if args.sound_flag_given:
+        if args.sound:  # sound file given
+            print_verbose("Sound file to use:",args.sound)
+        else:
+            print_verbose("No sound file specified, will attempt to extract it from video.")
+            codec = check_codec_of_file(args.filename)
+            ext = get_ext_from_codec(codec)
+            audio_file = extract_audio_from_file(args.filename, ext)
+            print_verbose("Extracted audio file.")
+
+            args.sound = str(audio_file)  # override the args so that it loads the sound file that was extracted
+
     # If the new anim frames is shorter than the old one, then in /output there will be both new and old frames. Empty the directory to fix this.
     shutil.rmtree(BASE_PATH / "output")
     os.mkdir(BASE_PATH / "output")
@@ -193,7 +249,8 @@ if should_update:
     animation_files = os.listdir(BASE_PATH / "video")
     animation_files.sort()
     for i, f in enumerate(animation_files):
-        print_verbose(f"- Frame: {f}")
+        # TODO: REMOVE THIS
+        #print_verbose(f"- Frame: {f}")
 
         # f = 00001.png
         path = BASE_PATH / "video" / f
@@ -204,7 +261,6 @@ if should_update:
             f"--size={WIDTH}x{HEIGHT}",
             path.as_posix(),
         ]
-        # print("CHAFA", " ".join(chafa_cmd))
         frame = subprocess.check_output(
             chafa_cmd,
             text=True,
@@ -228,6 +284,14 @@ else:
     HEIGHT = len(frames[0].splitlines())
 
 print_verbose("-----------")
+
+
+
+
+# save the caching arguments
+with open(BASE_PATH / "cache.json", "w") as f:
+    args_dict = {key: value for key, value in args._get_kwargs()}
+    json.dump(args_dict, f, indent=2)
 
 
 # Get the fetch output(neofetch/fastfetch)
@@ -293,20 +357,23 @@ BOTTOM = HEIGHT  # + TOP
 
 if not args.benchmark:
     try:
-        # if args.sound:
-        #    subprocess.Popen(["play",args.sound], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+
+        framerate_to_use = args.playback_rate
+        if args.sound_flag_given:
+            framerate_to_use = args.framerate  # ignore wanted playback rate so that desync doesn't happen
+
         script_args = [
             "bash",
             script_path,
-            str(args.playback_rate),
+            str(framerate_to_use),
             str(TOP),
             str(LEFT),
             str(RIGHT),
             str(BOTTOM),
         ]
-        if args.sound:
-          script_args.append(str(args.sound))
-        
+        if args.sound_flag_given:  # if user requested for sound to be played
+            script_args.append(str(args.sound))
+
         subprocess.call(
             script_args,
             text=True,

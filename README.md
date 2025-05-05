@@ -90,6 +90,8 @@ Seperating video into frames takes some time and can potentially use up a lot of
 
 - [X] Fix audio sync issues.
 
+- [ ] Add an info text that updates itself when caching.
+
 ## Credits
 
 Neofetch: [Neofetch](https://github.com/dylanaraps/neofetch)

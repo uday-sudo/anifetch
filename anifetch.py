@@ -105,7 +105,7 @@ parser.add_argument(
     "--sound",
     required=False,
     nargs="?",
-    help="Optional. Will playback a sound file while displaying the animation.",
+    help="Optional. Will playback a sound file while displaying the animation. If you give only -s without any sound file it will attempt to extract the sound from the video.",
     type=str,
 )
 parser.add_argument(

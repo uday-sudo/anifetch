@@ -62,7 +62,7 @@ Anifetch attempts to cache ffmpeg output so that it doesn't need to render them 
 
 You should probably make sure that the video's height (in lines) is lower or equal to the height of the neofetch output. Otherwise it will probably give an IndexError.
 
-Also, ffmpeg can generate the the same image for 2 consecutive frames. Try changing the framerate if that happens. Or just increase the playback rate.
+Also, ffmpeg can generate the the same image for 2 consecutive frames, which may make it appear like it's stuttering. Try changing the framerate if that happens. Or just increase the playback rate.
 
 ## What's Next
 
@@ -87,3 +87,5 @@ Also, ffmpeg can generate the the same image for 2 consecutive frames. Try chang
 Neofetch: [Neofetch](https://github.com/dylanaraps/neofetch)
 
 I got the base neofetch config from here, spesifically the Bejkon 2 config file: [Neofetch Themes by Chick2D](https://github.com/Chick2D/neofetch-themes)
+
+I'd like to thank Pewdiepie for creating his Linux video. I got the inspiration for this tool from his video. [Video](https://m.youtube.com/watch?v=pVI_smLgTY0&t=878s&pp=ygUJcGV3ZGllcGll)

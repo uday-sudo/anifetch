@@ -1,22 +1,22 @@
 import subprocess
 import time
 import os
+import shutil
 
 
-def time_check_nocache(args, count:int):
+def time_check_nocache(args, count: int):
     args = args.split(" ")
+    
+    if args[1] == "anifetch.py":
+        args.append("--force-render")
+    
     st = time.time()
     for _ in range(count):
-        # try without cache and then with cache
-        try:
-            os.rmdir("/tmp/active")
-        except FileNotFoundError:
-            pass
-
         subprocess.call(args)
     return time.time() - st
 
-def time_check_cache(args, count:int):
+
+def time_check_cache(args, count: int):
     args = args.split(" ")
     subprocess.call(args)  # gen cache
 
@@ -24,6 +24,7 @@ def time_check_cache(args, count:int):
     for _ in range(count):
         subprocess.call(args)
     return time.time() - st
+
 
 count = 10
 common_args = "-f example.mp4 -W 60 -H 30 -r 10 --benchmark"
@@ -67,4 +68,3 @@ print("Anifetch(No Cache)(fastfetch)")
 print(anifetch_nocache_fast)
 print("Anifetch(Cached)(fastfetch)")
 print(anifetch_cached_fast)
-

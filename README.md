@@ -1,4 +1,5 @@
 ![example](example.png)
+
 # Anifetch - Neofetch but animated.
 
 This is a small tool built with neofetch/fastfetch, ffmpeg and chafa. It allows you to use neofetch or fastfetch while having animations.
@@ -45,14 +46,15 @@ for bash it is: `alias anifetch='your-command'`
 
 Here's the benchmark from running each cli 10 times. Tested on Linux Mint with Intel I5-12500H.
 
-| CLI       | Time Taken(total) | Time Taken (avg) |
-| --------- | ----------------- | ---------------- |
-| neofetch  | 4.90 seconds     | 0.49 seconds   |
-| fastfetch | 0.07 seconds     | 0.007 seconds    |
-| anifetch [nocache] [neofetch]  | 5.67 seconds     | 0.57 seconds   |
-| anifetch [cache] [neofetch]  | 5.50 seconds     | 0.55 seconds   |
-| anifetch [nocache] [fastfetch]  | 0.36 seconds     | 0.036 seconds   |
-| anifetch [cache] [fastfetch]  | 0.37 seconds     | 0.037 seconds   |
+| CLI                          | Time Taken(total) | Time Taken (avg) |
+| ---------------------------- | ----------------- | ---------------- |
+| neofetch                     | 4.996 seconds     | 0.500 seconds    |
+| fastfetch                    | 0.083 seconds     | 0.008 seconds    |
+| anifetch(nocache)(neofetch)  | 77.071 seconds    | 7.707 seconds    |
+| anifetch(cache)(neofetch)    | 5.348 seconds     | 0.535 seconds    |
+| anifetch(nocache)(fastfetch) | 73.414 seconds    | 7.341 seconds    |
+| anifetch(cache)(fastfetch)   | 0.382 seconds     | 0.038 seconds    |
+
 
 As it can be seen, **Anifetch** is quite fast, especially when you cache the animations and use it with fastfetch.
 
@@ -64,23 +66,27 @@ You should probably make sure that the video's height (in lines) is lower or equ
 
 Also, ffmpeg can generate the the same image for 2 consecutive frames, which may make it appear like it's stuttering. Try changing the framerate if that happens. Or just increase the playback rate.
 
+Seperating video into frames takes some time and can potentially use up a lot of space during caching. After caching is done the video images will be deleted. Also note that you need to set the same framerate as the audio when playing a video. Otherwise video and audio will desync.
+
 ## What's Next
 
 - [ ] Fix the potential IndexError that comes when chafa output in lines is higher than the neofetch output.
 
-- [X] Add music support
+- [x] Add music support
 
-- [X] Cache chafa output
+- [x] Cache chafa output
 
-- [X] Make it faster
+- [x] Make it faster
 
-- [X] Only save the template + animation frames, dont save the animation frames with the layout applied to them.
+- [x] Only save the template + animation frames, dont save the animation frames with the layout applied to them.
 
-- [X] Add fastfetch support.
+- [x] Add fastfetch support.
 
-- [X] Instead of just saving the filename for cache validation, save the width and height as well.
+- [x] Instead of just saving the filename for cache validation, save the width and height as well.
 
-- [X] Seperate frame generation framerate(ffmpeg) and video playback framerate
+- [x] Seperate frame generation framerate(ffmpeg) and video playback framerate
+
+- [X] Fix audio sync issues.
 
 ## Credits
 

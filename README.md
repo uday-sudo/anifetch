@@ -23,13 +23,13 @@ For Ubuntu/Debian systems it's `sudo apt-get install sox libsox-fmt-mp3` to inst
 
 ## How to Use It
 
-Your neofetch logo file should only include a single character for the ascii art. Anifetch will attempt to find it and replace it with the chafa animation output. An example logo file can be found in `example-logo.txt`
+Your neofetch logo file should only include a single character for the ascii art. Anifetch will attempt to find it and replace it with the chafa animation output. An example logo file can be found in `example-logo.txt`. Fastfetch doesnt need any special configuration.
 
 An example neofetch config can be found here: `example-config.conf`
 
 Simply place your video/gif file in the project folder. There's an already included test file called `video.mp4`, you can use that if you want.
 
-Then run `python3 anifetch.py -f [filename] --framerate 10 --width 40 --height 20 -c "[add optional chafa arguments]"`.
+Then run `python3 anifetch.py -f [filename] --framerate 10 --width 40 --height 20 -c "[add optional chafa arguments if you want]"`.
 
 Here's an example command: `python3 anifetch.py -f "video.mp4" -r 10 -W 40 -H 20 -c "--symbols wide --fg-only"`
 

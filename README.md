@@ -1,7 +1,7 @@
 ![example](example.png)
-# Anifetch - neofetch but animated.
+# Anifetch - Neofetch but animated.
 
-This is a small tool built with neofetch, ffmpeg and chafa. It allows you to use neofetch while having animations.
+This is a small tool built with neofetch/fastfetch, ffmpeg and chafa. It allows you to use neofetch or fastfetch while having animations.
 
 ## How to Install
 

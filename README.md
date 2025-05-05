@@ -49,10 +49,10 @@ Here's the benchmark from running each cli 10 times. Tested on Linux Mint with I
 | --------- | ----------------- | ---------------- |
 | neofetch  | 4.90 seconds     | 0.49 seconds   |
 | fastfetch | 0.07 seconds     | 0.007 seconds    |
-| anifetch(nocache)(neofetch)  | 5.67 seconds     | 0.57 seconds   |
-| anifetch(cache)(neofetch)  | 5.50 seconds     | 0.55 seconds   |
-| anifetch(nocache)(fastfetch)  | 0.36 seconds     | 0.036 seconds   |
-| anifetch(cache)(fastfetch)  | 0.37 seconds     | 0.037 seconds   |
+| anifetch [nocache] [neofetch]  | 5.67 seconds     | 0.57 seconds   |
+| anifetch [cache] [neofetch]  | 5.50 seconds     | 0.55 seconds   |
+| anifetch [nocache] [fastfetch]  | 0.36 seconds     | 0.036 seconds   |
+| anifetch [cache] [fastfetch]  | 0.37 seconds     | 0.037 seconds   |
 
 As it can be seen, **Anifetch** is quite fast, especially when you cache the animations and use it with fastfetch.
 

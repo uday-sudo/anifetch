@@ -4,9 +4,7 @@
 
 FRAME_DIR="/tmp/anifetch/output"
 
-# Gracefully handle Ctrl+C
-# TODO: the cursor should be placed at end when the user does ctrl + c
-trap "echo -e '\nExiting...'; exit 0" SIGINT
+#trap "echo -e '\nExiting...'; exit 0" SIGINT
 
 # Check for FRAMERATE input
 if [ $# -ne 5 ]; then
@@ -31,7 +29,9 @@ adjusted_sleep_time=$(echo "$sleep_time / $num_lines" | bc -l)
 
 # Hide cursor
 tput civis
-trap "tput cnorm; tput cup $(tput lines) 0; exit" INT
+
+# TODO: the cursor should be placed at end when the user does ctrl + c
+trap "tput cnorm; if [ -t 0 ]; then stty echo; fi; tput sgr0; tput cup $(tput lines) 0; exit 0" SIGINT
 
 # Optional: print static template here (once)
 clear

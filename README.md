@@ -1,5 +1,5 @@
 ![example](example.png)
-# anifetch - neofetch but animated.
+# Anifetch - neofetch but animated.
 
 This is a small tool built with neofetch, ffmpeg and chafa. It allows you to use neofetch while having animations.
 
@@ -16,6 +16,10 @@ git clone https://github.com/Notenlish/anifetch
 ```
 
 You don't need to setup an venv or install any python modules.
+
+If you want sound support, you will need to install `sox` and `libsox-fmt-mp3`.
+
+For Ubuntu/Debian systems it's `sudo apt-get install sox libsox-fmt-mp3` to install it.
 
 ## How to Use It
 
@@ -39,43 +43,44 @@ for bash it is: `alias anifetch='your-command'`
 
 ## Benchmarks
 
-Here's the benchmark from running each cli 10 times:
+Here's the benchmark from running each cli 10 times. Tested on Linux Mint with Intel I5-12500H.
 
 | CLI       | Time Taken(total) | Time Taken (avg) |
 | --------- | ----------------- | ---------------- |
-| anifetch  | 6.357 seconds     | 0.6357 seconds   |
-| fastfetch | 0.127 seconds     | 0.127 seconds    |
-| neofetch  | 5.869 seconds     | 0.5869 seconds   |
+| neofetch  | 4.90 seconds     | 0.49 seconds   |
+| fastfetch | 0.07 seconds     | 0.007 seconds    |
+| anifetch(nocache)(neofetch)  | 5.67 seconds     | 0.57 seconds   |
+| anifetch(cache)(neofetch)  | 5.50 seconds     | 0.55 seconds   |
+| anifetch(nocache)(fastfetch)  | 0.36 seconds     | 0.036 seconds   |
+| anifetch(cache)(fastfetch)  | 0.37 seconds     | 0.037 seconds   |
 
-_So, anifetch is only 0.0488 seconds slower than neofetch._
-
-Keep in mind that these results are from running it cached. If you're running it for the first time, or told the cli to re-render it, it will take some time to generate and cache all the frames.
+As it can be seen, **Anifetch** is quite fast, especially when you cache the animations and use it with fastfetch.
 
 ## Notes
 
-Anifetch attempts to cache ffmpeg output so that it doesn't need to render them again when you run it with the same file. However, if the name of the file is the same, but it's contents has changed, it won't re-render it. In that case, you will need to add `--force-render` as an argument to `anifetch.py` so that it re-renders it. You only have to do this once when you change the file.
+Anifetch attempts to cache ffmpeg output so that it doesn't need to render them again when you run it with the same file. However, if the name of the file is the same, but it's contents has changed, it won't re-render it. In that case, you will need to add `--force-render` as an argument to `anifetch.py` so that it re-renders it. You only have to do this only once when you change the file contents.
 
 You should probably make sure that the video's height (in lines) is lower or equal to the height of the neofetch output. Otherwise it will probably give an IndexError.
 
-Also, ffmpeg can generate the the same image for 2 consecutive frames. IDK what would be the best way to solve this issue. I could check the hash of the images but that would add more processing load.
+Also, ffmpeg can generate the the same image for 2 consecutive frames. Try changing the framerate if that happens. Or just increase the playback rate.
 
 ## What's Next
 
 - [ ] Fix the potential IndexError that comes when chafa output in lines is higher than the neofetch output.
 
-- [ ] Add music support
+- [X] Add music support
 
-- [ ] Also cache chafa output
+- [X] Cache chafa output
 
-- [ ] make it faster
+- [X] Make it faster
 
-- [ ] Only save the template + animation frames, dont save the animation frames with the layout applied to them.
+- [X] Only save the template + animation frames, dont save the animation frames with the layout applied to them.
 
-- [ ] Add fastfetch support.
+- [X] Add fastfetch support.
 
-- [ ] Instead of just caching the filename, cache the width and height as well
+- [X] Instead of just saving the filename for cache validation, save the width and height as well.
 
-- [ ] Seperate frame generation framerate(ffmpeg) and video playback framerate
+- [X] Seperate frame generation framerate(ffmpeg) and video playback framerate
 
 ## Credits
 

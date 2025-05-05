@@ -18,7 +18,7 @@ git clone https://github.com/Notenlish/anifetch
 
 You don't need to setup an venv or install any python modules.
 
-If you want sound support, you will need to install `sox` and `libsox-fmt-mp3`.
+Sound functionality is added via `ffplay`. If you install ffmpeg via a package manager like `apt` it should also install it automatically.
 
 For Ubuntu/Debian systems it's `sudo apt-get install sox libsox-fmt-mp3` to install it.
 
@@ -35,6 +35,8 @@ Then run `python3 anifetch.py -f [filename] --framerate 10 --width 40 --height 2
 Here's an example command: `python3 anifetch.py -f "video.mp4" -r 10 -W 40 -H 20 -c "--symbols wide --fg-only"`
 
 Run `python3 anifetch.py --help` if you need help.
+
+You can also play a sound via `-s [sound filename]`.
 
 ## Creating a Shortcut
 

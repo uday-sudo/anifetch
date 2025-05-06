@@ -57,7 +57,6 @@ Here's the benchmark from running each cli 10 times. Tested on Linux Mint with I
 | anifetch(nocache)(fastfetch) | 73.414 seconds    | 7.341 seconds    |
 | anifetch(cache)(fastfetch)   | 0.382 seconds     | 0.038 seconds    |
 
-
 As it can be seen, **Anifetch** is quite fast if you cache the animations, especially when paired with fastfetch.
 
 ## Notes
@@ -69,6 +68,8 @@ You should probably make sure that the video's height (in lines) is lower or equ
 Also, ffmpeg can generate the the same image for 2 consecutive frames, which may make it appear like it's stuttering. Try changing the framerate if that happens. Or just increase the playback rate.
 
 Seperating video into frames takes some time and can potentially use up a lot of space during caching. After caching is done the video images will be deleted. Also note that you need to set the same framerate as the audio when playing a video. Otherwise video and audio will desync.
+
+If you set animation resolution really big it may not be able to keep up with the audio. I have plans for optimizing the script so this is less of an issues.
 
 ## What's Next
 
@@ -88,7 +89,7 @@ Seperating video into frames takes some time and can potentially use up a lot of
 
 - [x] Seperate frame generation framerate(ffmpeg) and video playback framerate
 
-- [X] Fix audio sync issues.
+- [x] Fix audio sync issues.
 
 - [ ] Add an info text that updates itself when caching.
 
@@ -97,6 +98,8 @@ Seperating video into frames takes some time and can potentially use up a lot of
 - [ ] Use threading when seperating video into frames and process them with chafa at the same time. This should speed up caching significantly.
 
 - [ ] Fix transparent video frame seperation.
+
+- [ ] Figure out a way to display animations faster. Either optimize the bash script or use Python/C.
 
 ## Credits
 

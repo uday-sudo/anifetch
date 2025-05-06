@@ -144,8 +144,11 @@ if not pathlib.Path(args.filename).exists():
     raise FileNotFoundError(args.filename)
 
 
-# print(args._get_kwargs())
-# [ ('filename', 'example.mp4'), ('width', 40), ('height', 20), ('verbose', False), ('framerate', 10), ('sound', 'bad-apple.mp3'), ('force_render', False), ('chafa_arguments', '--symbols ascii --fg-only') ]
+if args.sound_flag_given:
+    codec = check_codec_of_file(args.filename)
+    ext = get_ext_from_codec(codec)
+    args.sound = str(BASE_PATH / f"output_audio.{ext}")
+
 
 # check cache
 old_filename = ""
@@ -174,16 +177,7 @@ try:
                         f"Value didnt match cached value, will cache again. Value:{value} Cache:{cached_value}",
                     )
                     should_update = True
-                    if key == "sound":
-                        # this code is spaghettifying at an alarming rate.
-                        sound_that_wouldve_been_generated = ""
-                        codec = check_codec_of_file(args.filename)
-                        ext = get_ext_from_codec(codec)
-                        sound_that_wouldve_been_generated = str(BASE_PATH / f"output_audio.{ext}")
-                        if sound_that_wouldve_been_generated == cached_value:
-                            should_update=False
-                    if should_update:
-                        print_verbose("Cache invalid, will cache again.")
+                    print_verbose("Cache invalid, will cache again.")
 except FileNotFoundError:
     should_update = True
 

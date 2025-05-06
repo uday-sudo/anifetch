@@ -58,7 +58,7 @@ Here's the benchmark from running each cli 10 times. Tested on Linux Mint with I
 | anifetch(cache)(fastfetch)   | 0.382 seconds     | 0.038 seconds    |
 
 
-As it can be seen, **Anifetch** is quite fast, especially when you cache the animations and use it with fastfetch.
+As it can be seen, **Anifetch** is quite fast if you cache the animations, especially when paired with fastfetch.
 
 ## Notes
 

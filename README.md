@@ -20,8 +20,6 @@ You don't need to setup an venv or install any python modules.
 
 Sound functionality is added via `ffplay`. If you install ffmpeg via a package manager like `apt` it should also install it automatically.
 
-For Ubuntu/Debian systems it's `sudo apt-get install sox libsox-fmt-mp3` to install it.
-
 ## How to Use It
 
 Your neofetch logo file should only include a single character for the ascii art. Anifetch will attempt to find it and replace it with the chafa animation output. An example logo file can be found in `example-logo.txt`. Fastfetch doesnt need any special configuration.

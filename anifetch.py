@@ -145,9 +145,12 @@ if not pathlib.Path(args.filename).exists():
 
 
 if args.sound_flag_given:
-    codec = check_codec_of_file(args.filename)
-    ext = get_ext_from_codec(codec)
-    args.sound = str(BASE_PATH / f"output_audio.{ext}")
+    if args.sound:
+        pass
+    else:
+        codec = check_codec_of_file(args.filename)
+        ext = get_ext_from_codec(codec)
+        args.sound_saved_path = str(BASE_PATH / f"output_audio.{ext}")
 
 
 # check cache
@@ -172,9 +175,10 @@ try:
                     "verbose",
                     "fast_fetch",
                     "benchmark",
+                    "force_render"
                 ):  # These arguments don't invalidate the cache.
                     print_verbose(
-                        f"Value didnt match cached value, will cache again. Value:{value} Cache:{cached_value}",
+                        f"{key} INVALID! Will cache again. Value:{value} Cache:{cached_value}",
                     )
                     should_update = True
                     print_verbose("Cache invalid, will cache again.")
@@ -214,16 +218,22 @@ if should_update:
             "-i",
             f"{args.filename}",
             "-vf",
-            f"fps={args.framerate}",
-            BASE_PATH / "video/%05d.png",
+            f"fps={args.framerate},format=rgba",
+            str(BASE_PATH / "video/%05d.png"),
         ],
         stdout=stdout,
         stderr=stderr,
     )
 
+    print_verbose(args.sound_flag_given)
+
     if args.sound_flag_given:
         if args.sound:  # sound file given
             print_verbose("Sound file to use:",args.sound)
+            source = pathlib.Path(args.sound)
+            dest = BASE_PATH / source.with_name(f"output_audio{source.suffix}")
+            shutil.copy(source, dest)
+            args.sound_saved_path = str(dest)
         else:
             print_verbose("No sound file specified, will attempt to extract it from video.")
             codec = check_codec_of_file(args.filename)
@@ -231,7 +241,10 @@ if should_update:
             audio_file = extract_audio_from_file(args.filename, ext)
             print_verbose("Extracted audio file.")
 
-            args.sound = str(audio_file)  # override the args so that it loads the sound file that was extracted
+            args.sound_saved_path = str(audio_file)
+
+        print_verbose(args.sound_saved_path)
+
 
     # If the new anim frames is shorter than the old one, then in /output there will be both new and old frames. Empty the directory to fix this.
     shutil.rmtree(BASE_PATH / "output")
@@ -267,7 +280,7 @@ if should_update:
         # AKA: even if I specify 40x20, chafa might give me 40x11 or something like that.
         if i == 0:
             HEIGHT = len(frame.splitlines())
-        frames.append(frame)
+            frames.append(frame) # dont question this, I need frames to have at least a single item
 else:
     # just use cached
     for filename in os.listdir(BASE_PATH / "output"):
@@ -275,17 +288,23 @@ else:
         with open(path, "r") as file:
             frame = file.read()
             frames.append(frame)
+        break  # dont question this, I just need frames to have a single item
     HEIGHT = len(frames[0].splitlines())
+
+    with open(BASE_PATH / "cache.json", "r") as f:
+        data = json.load(f)
+    args.sound_saved_path = data["sound_saved_path"]
 
 print_verbose("-----------")
 
 
-
+# print_verbose("ARGS FOR SAVING CACHE.JSON", args)
 
 # save the caching arguments
 with open(BASE_PATH / "cache.json", "w") as f:
     args_dict = {key: value for key, value in args._get_kwargs()}
     json.dump(args_dict, f, indent=2)
+
 
 
 # Get the fetch output(neofetch/fastfetch)
@@ -366,8 +385,10 @@ if not args.benchmark:
             str(BOTTOM),
         ]
         if args.sound_flag_given:  # if user requested for sound to be played
-            script_args.append(str(args.sound))
+            script_args.append(str(args.sound_saved_path))
 
+        print(script_args)
+        #raise SystemExit
         subprocess.call(
             script_args,
             text=True,

@@ -92,6 +92,12 @@ Seperating video into frames takes some time and can potentially use up a lot of
 
 - [ ] Add an info text that updates itself when caching.
 
+- [ ] Allow setting ffmpeg args.
+
+- [ ] Use threading when seperating video into frames and process them with chafa at the same time. This should speed up caching significantly.
+
+- [ ] Fix transparent video frame seperation.
+
 ## Credits
 
 Neofetch: [Neofetch](https://github.com/dylanaraps/neofetch)

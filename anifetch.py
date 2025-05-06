@@ -257,7 +257,7 @@ if should_update:
         path = BASE_PATH / "video" / f
         chafa_cmd = [
             "chafa",
-            *args.chafa_arguments.split(" "),
+            *args.chafa_arguments.strip().split(" "),
             # "--color-space=rgb",
             f"--size={WIDTH}x{HEIGHT}",
             path.as_posix(),
@@ -287,7 +287,11 @@ else:
 
     with open(BASE_PATH / "cache.json", "r") as f:
         data = json.load(f)
-    args.sound_saved_path = data["sound_saved_path"]
+    
+    if args.sound_flag_given:
+        args.sound_saved_path = data["sound_saved_path"]
+    else:
+        args.sound_saved_path = None
 
 print_verbose("-----------")
 

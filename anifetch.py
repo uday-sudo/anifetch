@@ -51,10 +51,7 @@ def check_sound_flag():
     return False
 
 
-# TODO: cache arguments + filename
-# also, add support for fastfetch
-# when caching, tell the user that its caching so they know why its slow
-# also allow the user to provide their own frames if they want as well.
+# TODO: allow the user to provide their own frames if they want as well.
 
 st = time.time()
 
@@ -208,9 +205,6 @@ if should_update:
     stdout = None if args.verbose else subprocess.DEVNULL
     stderr = None if args.verbose else subprocess.STDOUT
 
-    # TODO: remove this
-    stdout = subprocess.DEVNULL
-    stderr = subprocess.DEVNULL
 
     subprocess.call(
         [
@@ -359,9 +353,6 @@ BOTTOM = HEIGHT  # + TOP
 
 script_dir = os.path.dirname(__file__)
 script_path = os.path.join(script_dir, "loop.sh")
-
-# print(args.framerate, TOP, LEFT, RIGHT, BOTTOM)
-# raise SystemExit
 
 
 RIGHT = WIDTH + PAD_LEFT

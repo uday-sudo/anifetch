@@ -105,6 +105,8 @@ Currently only the `symbols` format of chafa is supported, formats like kitty, i
 
 - [ ] Allow the user to provide their own premade frames in a folder instead of an video.
 
+- [ ] Update the animated logo on the readme so that its resolution is smaller + each individual symbol is bigger.
+
 ## Credits
 
 Neofetch: [Neofetch](https://github.com/dylanaraps/neofetch)

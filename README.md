@@ -69,6 +69,8 @@ Seperating video into frames takes some time and can potentially use up a lot of
 
 If you set animation resolution really big it may not be able to keep up with the audio. I have plans for optimizing the script so this is less of an issues.
 
+Currently only the `symbols` format of chafa is supported, formats like kitty, iterm etc. are not supported. If you try to tell chafa to use iterm, kitty etc. it will just override your format with `symbols` mode.
+
 ## What's Next
 
 - [ ] Fix the potential IndexError that comes when chafa output in lines is higher than the neofetch output.

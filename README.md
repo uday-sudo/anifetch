@@ -1,4 +1,4 @@
-![example](example.png)
+![anifetch](anifetch.webp)
 
 # Anifetch - Neofetch but animated.
 

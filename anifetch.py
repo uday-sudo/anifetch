@@ -51,7 +51,6 @@ def check_sound_flag():
     return False
 
 
-# TODO: allow the user to provide their own frames if they want as well.
 
 st = time.time()
 
@@ -254,10 +253,13 @@ if should_update:
         #print_verbose(f"- Frame: {f}")
 
         # f = 00001.png
+        chafa_args = args.chafa_arguments.strip()
+        chafa_args += " --format symbols"  # Fixes https://github.com/Notenlish/anifetch/issues/1
+        
         path = BASE_PATH / "video" / f
         chafa_cmd = [
             "chafa",
-            *args.chafa_arguments.strip().split(" "),
+            *chafa_args.split(" "),
             # "--color-space=rgb",
             f"--size={WIDTH}x{HEIGHT}",
             path.as_posix(),

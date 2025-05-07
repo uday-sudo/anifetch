@@ -101,6 +101,10 @@ If you set animation resolution really big it may not be able to keep up with th
 
 - [ ] Figure out a way to display animations faster. Either optimize the bash script or use Python/C.
 
+- [ ] Support different formats like iterm, kitty, sixel etc.
+
+- [ ] Allow the user to provide their own premade frames in a folder instead of an video.
+
 ## Credits
 
 Neofetch: [Neofetch](https://github.com/dylanaraps/neofetch)

@@ -38,9 +38,7 @@ You can also play a sound via `-s [sound filename]`.
 
 ## Creating a Shortcut
 
-Just create an shell alias.
-
-for bash it is: `alias anifetch='your-command'`
+Just add an shell alias to your `~/.bashrc` file. Example: `alias anifetch='python3 [path-to-anifetch.py] -f [path-to-video-file]'`
 
 ## Benchmarks
 

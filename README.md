@@ -105,6 +105,8 @@ Currently only the `symbols` format of chafa is supported, formats like kitty, i
 
 - [ ] Create an installer bash script to provide an easy installation option for people.
 
+- [ ] Add an option to generate an mp4 with the terminal rendered animation(for putting it as a desktop background)
+
 ## Credits
 
 Neofetch: [Neofetch](https://github.com/dylanaraps/neofetch)

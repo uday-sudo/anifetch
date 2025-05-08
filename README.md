@@ -61,8 +61,6 @@ As it can be seen, **Anifetch** is quite fast if you cache the animations, espec
 
 Anifetch attempts to cache the animation so that it doesn't need to render them again when you run it with the same file. However, if the name of the file is the same, but it's contents has changed, it won't re-render it. In that case, you will need to add `--force-render` as an argument to `anifetch.py` so that it re-renders it. You only have to do this only once when you change the file contents.
 
-You should probably make sure that the video's height (in lines) is lower or equal to the height of the neofetch output. Otherwise it will probably give an IndexError.
-
 Also, ffmpeg can generate the the same image for 2 consecutive frames, which may make it appear like it's stuttering. Try changing the framerate if that happens. Or just increase the playback rate.
 
 Seperating video into frames takes some time and can potentially use up a lot of space during caching. After caching is done the video images will be deleted. Also note that you need to set the same framerate as the audio when playing a video. Otherwise video and audio will desync.
@@ -72,8 +70,6 @@ If you set animation resolution really big it may not be able to keep up with th
 Currently only the `symbols` format of chafa is supported, formats like kitty, iterm etc. are not supported. If you try to tell chafa to use iterm, kitty etc. it will just override your format with `symbols` mode.
 
 ## What's Next
-
-- [ ] Fix the potential IndexError that comes when chafa output in lines is higher than the neofetch output.
 
 - [x] Add music support
 

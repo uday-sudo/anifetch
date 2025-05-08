@@ -103,6 +103,8 @@ Currently only the `symbols` format of chafa is supported, formats like kitty, i
 
 - [ ] Update the animated logo on the readme so that its resolution is smaller + each individual symbol is bigger.
 
+- [ ] Create an installer bash script to provide an easy installation option for people.
+
 ## Credits
 
 Neofetch: [Neofetch](https://github.com/dylanaraps/neofetch)

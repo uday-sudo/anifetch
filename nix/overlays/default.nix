@@ -1,5 +1,5 @@
 {
   anifetch = final: _prev: {
-    anifetch = import ../packages/anifetch-wrapped.nix final.pkgs;
+    anifetch = import ../packages/anifetch.nix final.pkgs;
   };
 }

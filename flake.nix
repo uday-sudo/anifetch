@@ -19,9 +19,9 @@
     ];
     forAllSystems = nixpkgs.lib.genAttrs systems;
   in {
-    packages = forAllSystems (system: import ./packages nixpkgs.legacyPackages.${system});
+    packages = forAllSystems (system: import ./nix/packages nixpkgs.legacyPackages.${system});
 
-    overlays = import ./overlays;
+    overlays = import ./nix/overlays;
 
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
   };

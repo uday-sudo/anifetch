@@ -1,12 +1,11 @@
-from posix import truncate
-import subprocess
+import argparse
+import json
 import os
 import pathlib
-import argparse
 import shutil
-import time
-import json
+import subprocess
 import sys
+import time
 
 
 def print_verbose(*msg):
@@ -255,7 +254,7 @@ if should_update:
         # f = 00001.png
         chafa_args = args.chafa_arguments.strip()
         chafa_args += " --format symbols"  # Fixes https://github.com/Notenlish/anifetch/issues/1
-        
+
         path = BASE_PATH / "video" / f
         chafa_cmd = [
             "chafa",
@@ -289,7 +288,7 @@ else:
 
     with open(BASE_PATH / "cache.json", "r") as f:
         data = json.load(f)
-    
+
     if args.sound_flag_given:
         args.sound_saved_path = data["sound_saved_path"]
     else:

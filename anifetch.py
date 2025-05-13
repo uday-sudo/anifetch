@@ -128,8 +128,6 @@ parser.add_argument(
     help="Add this argument if you want to use fastfetch instead. Note than fastfetch will be run with '--logo none'.",
     action="store_true",
 )
-<<<<<<< HEAD
-=======
 parser.add_argument(
     "--remove-background",
     default=False,
@@ -143,7 +141,6 @@ parser.add_argument(
     help="Add this argument to chromakey a hexadecimal color from the video using ffmpeg e.g. '--chroma 0xc82044:0.1:0.1'",
     type=str,
 )
->>>>>>> 414f364 (Option to chromakey out a color with ffmpeg)
 args = parser.parse_args()
 args.sound_flag_given = check_sound_flag()  # adding this to the args so that it considers whether the flag was given or not and if the flag is given what the sound file was.
 args.chroma_flag_given = check_chroma_flag()

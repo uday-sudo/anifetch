@@ -128,12 +128,6 @@ parser.add_argument(
     help="Add this argument if you want to use fastfetch instead. Note than fastfetch will be run with '--logo none'.",
     action="store_true",
 )
-parser.add_argument(
-    "--remove-background",
-    default=False,
-    help="Add this argument to remove background from the video",
-    action="store_true",
-)
 parser.add_argument( 
     "--chroma",
     required=False,

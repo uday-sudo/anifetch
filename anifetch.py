@@ -162,7 +162,7 @@ if args.sound_flag_given:
 
 if args.chroma_flag_given:
     if args.chroma.startswith("#"):
-        sys.exit("color for hex code starts with an 0x! Not a #")
+        sys.exit("Color for hex code starts with an '0x'! Not a '#'")
 
 
 
